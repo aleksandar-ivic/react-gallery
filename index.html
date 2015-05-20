@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>React Gallery</title>
+    <style>
+        img {
+            width: 400px;
+            height: 200px;
+            padding: 10px;
+        }
+    </style>
+    <script src="build/react.js"></script>
+    <script src="build/JSXTransformer.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    <script src="http://kenwheeler.github.io/mcfly/McFly.js"></script>
+</head>
+<body>
+
+
+<div id="clicked-image">
+</div>
+<div id="app-container">
+</div>
+
+
+<script type="text/jsx">
+
+    _images = [
+        {
+            _id: "",
+            src: "http://5dcac05ecb17dc47e345-bbe3fac58700bd627b7986538e547fd7.r47.cf3.rackcdn.com/user_cars/large/b872c88c50074007638334f277c3e56a.jpg",
+            alt: "prva slika"
+        },
+        {
+            _id: "",
+            src: "http://5dcac05ecb17dc47e345-bbe3fac58700bd627b7986538e547fd7.r47.cf3.rackcdn.com/user_cars/large/d9431fd29067320a9ebb6fd4ce50e094.jpg",
+            alt: "druga slika"
+        },
+        {
+            _id: "",
+            src: "http://5dcac05ecb17dc47e345-bbe3fac58700bd627b7986538e547fd7.r47.cf3.rackcdn.com/user_cars/large/9c3e7c4ac906a7441a079389cae27eb4.jpg",
+            alt: "treca slika"
+        }
+    ];
+
+    var Image = React.createClass({
+        getInitialState: function () {
+            return {
+                zoomed: false
+            }
+        },
+        handleClick: function () {
+
+            this.setState({
+                zoomed: !this.state.zoomed
+            })
+        },
+        zoomIn: function () {
+            return (
+                    <img style={{width : 800, height : 600}} src={this.props.src}
+                         alt={this.props.alt}/>
+            );
+        },
+        zoomOut: function () {
+            return (
+                    <img style={{width : 400, height : 200}} src={this.props.src}
+                         alt={this.props.alt}/>
+            );
+        },
+        render: function () {
+            var zoomed = this.state.zoomed ? this.zoomIn() : this.zoomOut();
+            return (
+                    <a href="#" onClick={this.handleClick}>
+                        {zoomed}
+                    </a>
+            );
+        }
+    });
+
+
+    var Gallery = React.createClass({
+        render: function () {
+            var galleryNodes = this.props.data.map(function (image, index) {
+                return (
+                        <Image
+                                ref={index}
+                                key={index}
+                                src={image.src}
+                                alt={image.alt}/>
+                )
+            });
+            return (
+                    <div className="gallery-holder">
+                        {galleryNodes}
+                    </div>
+            );
+        }
+    });
+
+    var FocusImage = React.createClass({
+        render: function () {
+            return (
+                    <Image
+                            ref={index}
+                            key={index}
+                            src={image.src}
+                            alt={image.alt}/>
+            );
+        }
+    });
+
+    React.render(
+            /* STEP 1: pass the data into the controller view */
+            <Gallery data={_images}/>,
+            document.getElementById('app-container')
+    );
+
+</script>
+</body>
+</html>
